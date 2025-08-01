@@ -2,7 +2,7 @@ import type { ExtractTablesWithRelations } from "drizzle-orm";
 import { drizzle, type NodePgQueryResultHKT } from "drizzle-orm/node-postgres";
 import type { PgTransaction } from "drizzle-orm/pg-core";
 import type { Client } from "pg";
-import * as Pool from "pg-pool";
+import Pool from "pg-pool";
 import type { Logger } from "pino";
 
 // Import repository and service classes
