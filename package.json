@@ -27,6 +27,7 @@
     "@types/pg": "^8.15.5",
     "@types/pg-pool": "^2.0.6",
     "@types/uuid": "^9.0.8",
-    "drizzle-kit": "^0.31.4"
+    "drizzle-kit": "^0.31.4",
+    "typescript": "^5.9.2"
   }
 }
