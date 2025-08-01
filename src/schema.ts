@@ -69,7 +69,7 @@ const alertTriggerEventRefinements = createRefinements(
 			schema.meta({
 				description: "Type of trigger (e.g., over_temp, low_voltage)",
 			}),
-    location: (schema) => schema.meta({ description: "The alert location" })
+    location: (_schema) => locationSchema.nullable().meta({ description: "The alert location" })
 	},
 );
 
