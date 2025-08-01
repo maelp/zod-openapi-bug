@@ -1,5 +1,5 @@
-import type { z } from "@hono/zod-openapi";
-import { pgSchema, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { z } from "@hono/zod-openapi";
+import { jsonb, pgSchema, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import {
 	createInsertSchema,
 	createSelectSchema,
@@ -18,6 +18,29 @@ export function createRefinements<T extends Record<string, unknown>>(
 	}>;
 }
 
+export const locationSchema = z
+	.object({
+		latitude: z
+			.number()
+			.min(-90, "Latitude must be between -90 and 90 degrees")
+			.max(90, "Latitude must be between -90 and 90 degrees")
+			.meta({
+				description: "Latitude",
+			}),
+		longitude: z
+			.number()
+			.min(-180, "Longitude must be between -180 and 180 degrees")
+			.max(180, "Longitude must be between -180 and 180 degrees")
+			.meta({
+				description: "Longitude",
+			}),
+	})
+	.meta({
+		description: "Object located through a GPS location",
+	});
+
+export type Location = z.infer<typeof locationSchema>;
+
 // Alert trigger events table (immutable history)
 export const alertTriggerEventsTable = opsPgSchema.table("alert_triggers", {
 	id: uuid("id").primaryKey().defaultRandom(),
@@ -25,6 +48,7 @@ export const alertTriggerEventsTable = opsPgSchema.table("alert_triggers", {
 	event_timestamp: timestamp("event_timestamp", {
 		withTimezone: true,
 	}).notNull(),
+	location: jsonb("location").$type<Location>(),
 });
 
 // Zod schema refinements with OpenAPI descriptions for Alert Trigger Events
@@ -33,18 +57,19 @@ const alertTriggerEventRefinements = createRefinements(
 	createSelectSchema(alertTriggerEventsTable).shape,
 	{
 		id: (schema) =>
-			schema.openapi({
+			schema.meta({
 				description: "Unique identifier for the alert trigger event",
 			}),
 		event_timestamp: (schema) =>
-			schema.openapi({
+			schema.meta({
 				description:
 					"Timestamp of the battery data that resulted in the alert detection",
 			}),
 		trigger_type: (schema) =>
-			schema.openapi({
+			schema.meta({
 				description: "Type of trigger (e.g., over_temp, low_voltage)",
 			}),
+    location: (schema) => schema.meta({ description: "The alert location" })
 	},
 );
 
