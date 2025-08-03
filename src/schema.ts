@@ -24,18 +24,18 @@ export const locationSchema = z
 			.number()
 			.min(-90, "Latitude must be between -90 and 90 degrees")
 			.max(90, "Latitude must be between -90 and 90 degrees")
-			.meta({
+			.openapi({
 				description: "Latitude",
 			}),
 		longitude: z
 			.number()
 			.min(-180, "Longitude must be between -180 and 180 degrees")
 			.max(180, "Longitude must be between -180 and 180 degrees")
-			.meta({
+			.openapi({
 				description: "Longitude",
 			}),
 	})
-	.meta({
+	.openapi({
 		description: "Object located through a GPS location",
 	});
 
@@ -57,19 +57,19 @@ const alertTriggerEventRefinements = createRefinements(
 	createSelectSchema(alertTriggerEventsTable).shape,
 	{
 		id: (schema) =>
-			schema.meta({
+			schema.openapi({
 				description: "Unique identifier for the alert trigger event",
 			}),
 		event_timestamp: (schema) =>
-			schema.meta({
+			schema.openapi({
 				description:
 					"Timestamp of the battery data that resulted in the alert detection",
 			}),
 		trigger_type: (schema) =>
-			schema.meta({
+			schema.openapi({
 				description: "Type of trigger (e.g., over_temp, low_voltage)",
 			}),
-    location: (_schema) => locationSchema.nullable().meta({ description: "The alert location" })
+			location: (_schema) => locationSchema.nullable().openapi({ description: "The alert location" })
 	},
 );
 
